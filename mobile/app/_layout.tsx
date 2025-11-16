@@ -1,24 +1,48 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { Stack } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
-import 'react-native-reanimated';
+import { Stack } from "expo-router";
+import { PaperProvider, DefaultTheme } from "react-native-paper";
+import { useEffect } from "react";
+import { StatusBar } from "react-native";
 
-import { useColorScheme } from '@/hooks/use-color-scheme';
-
-export const unstable_settings = {
-  anchor: '(tabs)',
+// Tema global claro com azul
+const lightBlueTheme = {
+  ...DefaultTheme,
+  colors: {
+    ...DefaultTheme.colors,
+    background: "#f5fafd",
+    surface: "#fff",
+    primary: "#1976d2",
+    text: "#222",
+    onSurface: "#222",
+    onBackground: "#222",
+  },
 };
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
+  useEffect(() => {
+    StatusBar.setBarStyle("light-content");
+    StatusBar.setBackgroundColor("#1976d2");
+  }, []);
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} />
+    <PaperProvider theme={lightBlueTheme}>
+      <Stack
+        screenOptions={{
+          headerStyle: { backgroundColor: "#020202ff" },
+          headerTintColor: "#ff8913ff",
+          headerTitleAlign: "center",
+          contentStyle: { backgroundColor: "#e3e0e0ff" },
+        }}
+      >
+        <Stack.Screen
+          name="produtos/index"
+          options={{ title: "Lista de Produtos" }}
+        />
+
+        <Stack.Screen
+          name="produtos/[id]"
+          options={{ title: "Detalhes do Produto" }}
+        />
       </Stack>
-      <StatusBar style="auto" />
-    </ThemeProvider>
+    </PaperProvider>
   );
 }
