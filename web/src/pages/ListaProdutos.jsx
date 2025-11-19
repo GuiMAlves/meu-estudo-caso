@@ -1,4 +1,18 @@
+import { useEffect, useState } from "react";
+import produtoService from "../services/produtoService";
+
 export default function ListaProdutos() {
+  const [produtos, setProdutos] = useState([]);
+
+  const carregarProdutos = async () => {
+    const lista = await produtoService.listar();
+    setProdutos(lista);
+  };
+
+  useEffect(() => {
+    carregarProdutos();
+  }, []);
+
   return (
     <>
       <main class="container py-4">
@@ -15,37 +29,19 @@ export default function ListaProdutos() {
                       <tr>
                         <th>ID</th>
                         <th>Produto</th>
-                        <th>Categoria</th>
                         <th>Preço</th>
-                        <th>Qtd. Estoque</th>
                         <th></th>
                       </tr>
                     </thead>
                     <tbody>
-                      <tr>
-                        <td>1</td>
-                        <td>Camiseta</td>
-                        <td>Vestuário</td>
-                        <td>159.90</td>
-                        <td>459</td>
-                        <td><a href='/product/1' class= "btn btn-sm btn-primary">Detalhes</a></td>
-                      </tr>
-                      <tr>
-                        <td>45</td>
-                        <td>Calça cós alto</td>
-                        <td>Vestuário</td>
-                        <td>249.90</td>
-                        <td>59</td>
-                        <td><a href='/product/45' class= "btn btn-sm btn-primary">Detalhes</a></td>
-                      </tr>
-                      <tr>
-                        <td>28</td>
-                        <td>Porta retrato</td>
-                        <td>Decoração</td>
-                        <td>89.90</td>
-                        <td>8</td>
-                        <td><a href='/product/28' class= "btn btn-sm btn-primary">Detalhes</a></td>
-                      </tr>
+                      {produtos.map((produto) => (
+                        <tr key={produto.id}>
+                          <td>{produto.id}</td>
+                          <td>{produto.nome}</td>
+                          <td>R$ {produto.preco}</td>
+                          <td><a href={`/product/${produto.id}`} class= "btn btn-sm btn-primary">Detalhes</a></td>
+                        </tr>
+                      ))}
                     </tbody>
                   </table>
                 </div>
